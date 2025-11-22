@@ -1,3 +1,5 @@
+import java.awt.*;
+
 /**
  * Represents the player-controlled hero in the game board.
  * The hero has a position, a limited number of hearts (lives),
@@ -21,7 +23,11 @@ public class Hero {
 
 
     // ADDED
-    private int heroSpeed = 100;
+    private int heroSpeed = 1;
+
+    GamePanel gamePanel;
+    KeyHandler keyH;
+
 
 
     /**
@@ -31,10 +37,12 @@ public class Hero {
      * @param y      the initial column position of the hero
      * @param hearts the initial number of hearts (lives) the hero starts with
      */
-    public Hero(int x, int y, int hearts) {
-        this.x = x;
-        this.y = y;
+    public Hero(int x, int y, int hearts, GamePanel gamePanel, KeyHandler keyH) {
+        this.x = 10;
+        this.y = 10;
         this.hearts = hearts;
+        this.gamePanel = gamePanel;
+        this.keyH = keyH;
     }
 
 
@@ -176,6 +184,28 @@ public class Hero {
 
     // ADDED
 
+
+    public void update() {
+        if (keyH.upPressed) {
+            y -= heroSpeed;
+        }
+        else if (keyH.downPressed) {
+            y += heroSpeed;
+        }
+        else if (keyH.leftPressed) {
+            x -= heroSpeed;
+        }
+        else if (keyH.rightPressed) {
+            x += heroSpeed;
+        }
+
+
+    }
+
+    public void draw(Graphics g) {
+        g.setColor(Color.white);
+        g.fillRect(x, y, gamePanel.tileSize, gamePanel.tileSize);
+    }
 
     public int getHeroSpeed() {
         return heroSpeed;

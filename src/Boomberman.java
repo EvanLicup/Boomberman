@@ -22,6 +22,7 @@ public class Boomberman {
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
+        /*
         int gameOver = 0;      // flag to indicate when the game ends
         int endProgram = 0;    // flag to indicate when to exit the program
         int rows = 7;
@@ -98,14 +99,21 @@ public class Boomberman {
         
         }
 
+         */
+
 
         JFrame mainWindow = new JFrame();
         mainWindow.setTitle("Boomberman");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setResizable(false);
+        GamePanel gamePanel = new GamePanel();
+        mainWindow.add(gamePanel);
+        mainWindow.pack();
 
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
+
+        gamePanel.startGameThread();
 
 
     }
