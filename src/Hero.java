@@ -23,7 +23,9 @@ public class Hero {
 
 
     // ADDED
-    private int heroSpeed = 1;
+    private int heroSpeed = 5;
+    public String direction = "up";
+
 
     GamePanel gamePanel;
     KeyHandler keyH;
@@ -187,25 +189,26 @@ public class Hero {
 
     public void update() {
         if (keyH.upPressed) {
+            direction = "up";
             y -= heroSpeed;
         }
         else if (keyH.downPressed) {
+            direction = "down";
             y += heroSpeed;
         }
         else if (keyH.leftPressed) {
+            direction = "left";
             x -= heroSpeed;
         }
         else if (keyH.rightPressed) {
+            direction = "right";
             x += heroSpeed;
         }
 
 
     }
 
-    public void draw(Graphics g) {
-        g.setColor(Color.white);
-        g.fillRect(x, y, gamePanel.tileSize, gamePanel.tileSize);
-    }
+
 
     public int getHeroSpeed() {
         return heroSpeed;
