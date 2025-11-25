@@ -5,7 +5,8 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed, placePressed, detonatePressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, placePressed, detonatePressed,
+                    placeKeyDown;
 
 
     @Override
@@ -30,7 +31,10 @@ public class KeyHandler implements KeyListener {
             rightPressed = true;
         }
         else if (key == KeyEvent.VK_H) {
-            placePressed = true;
+            if (placeKeyDown != true) {
+                placePressed = true;
+                placeKeyDown = true;
+            }
         }
         else if (key == KeyEvent.VK_J) {
             detonatePressed = true;
@@ -56,6 +60,9 @@ public class KeyHandler implements KeyListener {
         }
         else if (key == KeyEvent.VK_J) {
             detonatePressed = false;
+        }
+        else if (key == KeyEvent.VK_H) {
+            placeKeyDown = false;
         }
 
     }
