@@ -1,5 +1,7 @@
 package model;
 
+import gamethread.Gamethread;
+
 import javax.swing.*;
 
 /**
@@ -27,14 +29,19 @@ public class Boomberman {
         mainWindow.setTitle("main.Boomberman");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setResizable(false);
-        GamePanel gamePanel = new GamePanel();
+
+        KeyHandler keyH = new KeyHandler();
+        GameModel gameModel = new GameModel(keyH);
+        GamePanel gamePanel = new GamePanel(gameModel);
+
         mainWindow.add(gamePanel);
         mainWindow.pack();
 
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
 
-        gamePanel.startGameThread();
+        Gamethread gamethread = new Gamethread(gameModel,gamePanel);
+        gamethread.startGameThread();
 
 
     }

@@ -14,9 +14,6 @@ public class Hero {
     /** Current column position of the hero on the board. */
     private int y;
 
-    /** Character used to visually represent the hero on the board. */
-    private char symbol = '@';
-
     /** Number of hearts (lives) remaining for the hero. */
     private int hearts;
 
@@ -24,7 +21,7 @@ public class Hero {
     private int heroSpeed = 5;
     public String direction = "left";
 
-    GamePanel gamePanel;
+    GameModel gm;
     KeyHandler keyH;
 
     public Rectangle hitBox = new Rectangle(32, 48, 32, 42);
@@ -39,11 +36,11 @@ public class Hero {
      * @param y      the initial column position of the hero
      * @param hearts the initial number of hearts (lives) the hero starts with
      */
-    public Hero(int x, int y, int hearts, GamePanel gamePanel, KeyHandler keyH) {
-        this.x = 4 * gamePanel.tileSize;
-        this.y = 3 * gamePanel.tileSize;
+    public Hero(int x, int y, int hearts, GameModel gm, KeyHandler keyH) {
+        this.x = 4 * gm.tileSize;
+        this.y = 3 * gm.tileSize;
         this.hearts = hearts;
-        this.gamePanel = gamePanel;
+        this.gm = gm;
         this.keyH = keyH;
     }
 
@@ -89,7 +86,7 @@ public class Hero {
             }
 
             collision = false;
-            gamePanel.cChecker.checkTile(this);
+            gm.cChecker.checkTile(this);
 
 
             if (collision == false) {
@@ -112,17 +109,17 @@ public class Hero {
 
         if (keyH.placePressed == true) {
             boolean hasActiveBomb = false;
-            for (Bomba b : gamePanel.bombs) {
+            for (Bomba b : gm.bombs) {
                 if (!b.exploded) {
                     hasActiveBomb = true;
                     break;
                 }
             }
             if (hasActiveBomb == false) {
-                int centerX = getX() + gamePanel.tileSize/ 2;
-                int centerY = getY() + gamePanel.tileSize/ 2;
-                Bomba b = new Bomba(centerX/ gamePanel.tileSize,centerY / gamePanel.tileSize, 3.0);
-                gamePanel.bombs.add(b);
+                int centerX = getX() + gm.tileSize/ 2;
+                int centerY = getY() + gm.tileSize/ 2;
+                Bomba b = new Bomba(centerX/ gm.tileSize,centerY / gm.tileSize, 3.0);
+                gm.bombs.add(b);
 
             }
             keyH.placePressed = false;

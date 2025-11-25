@@ -1,10 +1,10 @@
 package model;
 
 public class CollisionChecker {
-    GamePanel gp;
+    GameModel gm;
 
-    public CollisionChecker(GamePanel gp) {
-        this.gp = gp;
+    public CollisionChecker(GameModel gm) {
+        this.gm = gm;
     }
 
     public void checkTile(Hero hero) {
@@ -13,7 +13,7 @@ public class CollisionChecker {
         int heroTopY = hero.getY() + hero.hitBox.y;
         int heroBottomY = hero.getY() + hero.hitBox.y + hero.hitBox.height;
 
-        int tileSize = gp.tileSize;
+        int tileSize = gm.tileSize;
 
         // Hero edges in tile coordinates
         int heroLeftCol = heroLeftX / tileSize;
@@ -26,29 +26,29 @@ public class CollisionChecker {
         switch (hero.direction) {
             case "up":
                 int nextTopRow = (heroTopY - hero.getHeroSpeed()) / tileSize;
-                tile1 = gp.tiles[nextTopRow][heroLeftCol];
-                tile2 = gp.tiles[nextTopRow][heroRightCol];
+                tile1 = gm.tiles[nextTopRow][heroLeftCol];
+                tile2 = gm.tiles[nextTopRow][heroRightCol];
                 if (!tile1.isWalkable() || !tile2.isWalkable()) hero.collision = true;
                 break;
 
             case "down":
                 int nextBottomRow = (heroBottomY + hero.getHeroSpeed()) / tileSize;
-                tile1 = gp.tiles[nextBottomRow][heroLeftCol];
-                tile2 = gp.tiles[nextBottomRow][heroRightCol];
+                tile1 = gm.tiles[nextBottomRow][heroLeftCol];
+                tile2 = gm.tiles[nextBottomRow][heroRightCol];
                 if (!tile1.isWalkable() || !tile2.isWalkable()) hero.collision = true;
                 break;
 
             case "left":
                 int nextLeftCol = (heroLeftX - hero.getHeroSpeed()) / tileSize;
-                tile1 = gp.tiles[heroTopRow][nextLeftCol];
-                tile2 = gp.tiles[heroBottomRow][nextLeftCol];
+                tile1 = gm.tiles[heroTopRow][nextLeftCol];
+                tile2 = gm.tiles[heroBottomRow][nextLeftCol];
                 if (!tile1.isWalkable() || !tile2.isWalkable()) hero.collision = true;
                 break;
 
             case "right":
                 int nextRightCol = (heroRightX + hero.getHeroSpeed()) / tileSize;
-                tile1 = gp.tiles[heroTopRow][nextRightCol];
-                tile2 = gp.tiles[heroBottomRow][nextRightCol];
+                tile1 = gm.tiles[heroTopRow][nextRightCol];
+                tile2 = gm.tiles[heroBottomRow][nextRightCol];
                 if (!tile1.isWalkable() || !tile2.isWalkable()) hero.collision = true;
                 break;
         }
