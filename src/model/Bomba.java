@@ -1,13 +1,9 @@
-package object;
-
-import main.KeyHandler;
+package model;
 
 public class Bomba {
-    public int x;
-    public int y;
+    private int x;
+    private int y;
     private double timeTilExplosion;
-    public String placed = "BOMBA PLCAED";
-
     public boolean exploded = false;
 
 
@@ -30,6 +26,7 @@ public class Bomba {
         }
     }
 
+    public int getX() {return x;}
 
-
+    public int getY() {return y;}
 }

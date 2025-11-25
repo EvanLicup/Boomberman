@@ -1,4 +1,4 @@
-package main;
+package model;
 
 /**
  * The main.DestructibleTile class represents a tile that initially blocks movement

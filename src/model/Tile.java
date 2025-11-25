@@ -1,4 +1,4 @@
-package main;
+package model;
 
 /**
  * The main.Tile class serves as the base class for all terrain types on the game board.

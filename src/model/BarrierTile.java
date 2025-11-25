@@ -1,4 +1,4 @@
-package main;
+package model;
 
 public class BarrierTile extends Tile{
     private final char type = 'B';

@@ -1,4 +1,4 @@
-package main;
+package model;
 
 /**
  * Represents a tile that the main.Hero can walk on.

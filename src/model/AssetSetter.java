@@ -1,5 +1,4 @@
-package main;
-import object.*;
+package model;
 
 public class AssetSetter {
     GamePanel gp;

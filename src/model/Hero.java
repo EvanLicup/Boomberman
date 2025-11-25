@@ -1,6 +1,4 @@
-package main;
-
-import object.Bomba;
+package model;
 
 import java.awt.*;
 
@@ -21,11 +19,6 @@ public class Hero {
 
     /** Number of hearts (lives) remaining for the hero. */
     private int hearts;
-
-    /** Indicates whether the hero currently has an active bomb placed. */
-    private boolean hasActiveBomb = false;
-
-
 
     // ADDED
     private int heroSpeed = 5;
@@ -54,15 +47,6 @@ public class Hero {
         this.keyH = keyH;
     }
 
-
-    /**
-     * Decrements the hero's heart count by one, typically when hit by an explosion or even an enemy for future development.
-     */
-    public void loseHeart() {
-        this.hearts--;
-    }
-
-
     /**
      * Returns the current row position of the hero.
      *
@@ -81,58 +65,10 @@ public class Hero {
         return y;
     }
 
-    /**
-     * Returns the symbol used to visually represent the hero.
-     *
-     * @return the character symbol representing the hero
-     */
-    public char getSymbol() {
-        return symbol;
-    }
-
-    /**
-     * Validates whether a movement to a given tile is within the bounds
-     * of the board and whether that tile is walkable.
-     *
-     * @param moveX the target row to move to
-     * @param moveY the target column to move to
-     * @param board the game board used to check boundaries and walkability
-     * @return {@code true} if the target tile is inside bounds and walkable, {@code false} otherwise
-     */
-    /*
-    public boolean isValidated(int moveX, int moveY, GameBoard board) {
-        if (moveX < 0 || moveX >= board.getRows() || moveY < 0 || moveY >= board.getCols()) {
-            return false;
-        }
-        boolean nextMove = board.tileBoard[moveX][moveY].isWalkable();
-
-        if (nextMove == false) {
-            return false;
-        }
-
-        return true;
-    }
-
-     */
-
-
-    /** Updates the hero's active bomb status.
-     * @param choice {@code true} if a bomb is now active, {@code false} once the bomb has exploded
-     */
-    public void setHasActiveBomb(boolean choice) {
-        hasActiveBomb = choice;
-    }
-
     /** @return the remaining hearts of the hero */
     public int getHearts() {
         return hearts;
     }
-
-    /** @return {@code true} if a bomb is currently active, {@code false} otherwise */
-    public boolean getActiveBombStatus() {
-        return hasActiveBomb;
-    }
-
     // ADDED
 
 
@@ -175,11 +111,22 @@ public class Hero {
         }
 
         if (keyH.placePressed == true) {
-            int centerX = getX() + gamePanel.tileSize/ 2;
-            int centerY = getY() + gamePanel.tileSize/ 2;
-            Bomba b = new Bomba(centerX/ gamePanel.tileSize,centerY / gamePanel.tileSize, 3.0);
-            gamePanel.bombs.add(b);
+            boolean hasActiveBomb = false;
+            for (Bomba b : gamePanel.bombs) {
+                if (!b.exploded) {
+                    hasActiveBomb = true;
+                    break;
+                }
+            }
+            if (hasActiveBomb == false) {
+                int centerX = getX() + gamePanel.tileSize/ 2;
+                int centerY = getY() + gamePanel.tileSize/ 2;
+                Bomba b = new Bomba(centerX/ gamePanel.tileSize,centerY / gamePanel.tileSize, 3.0);
+                gamePanel.bombs.add(b);
+
+            }
             keyH.placePressed = false;
+
         }
 
     }

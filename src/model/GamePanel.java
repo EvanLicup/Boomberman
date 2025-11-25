@@ -1,6 +1,4 @@
-package main;
-
-import object.Bomba;
+package model;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -179,7 +177,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void getObjectImage () {
         try {
-            normalBomb = ImageIO.read(getClass().getResourceAsStream("/objects/bomb.png"));
+            normalBomb = ImageIO.read(getClass().getResourceAsStream("/objects/normalBomb.png"));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -274,7 +272,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void drawBomb(Graphics2D g2, Bomba b) {
 
 
-        g2.drawImage(normalBomb, b.x * tileSize, b.y * tileSize, tileSize, tileSize, null);
+        g2.drawImage(normalBomb, b.getX() * tileSize, b.getY() * tileSize, tileSize, tileSize, null);
     }
 
     @Override
