@@ -24,11 +24,13 @@ public class Hero {
 
     // ADDED
     private int heroSpeed = 5;
-    public String direction = "up";
-
+    public String direction = "left";
 
     GamePanel gamePanel;
     KeyHandler keyH;
+
+    public Rectangle hitBox = new Rectangle(8,16,8, 8);
+    boolean collision = false;
 
 
 
@@ -40,8 +42,8 @@ public class Hero {
      * @param hearts the initial number of hearts (lives) the hero starts with
      */
     public Hero(int x, int y, int hearts, GamePanel gamePanel, KeyHandler keyH) {
-        this.x = 10;
-        this.y = 10;
+        this.x = 4 * gamePanel.tileSize;
+        this.y = 3 * gamePanel.tileSize;
         this.hearts = hearts;
         this.gamePanel = gamePanel;
         this.keyH = keyH;
@@ -188,23 +190,43 @@ public class Hero {
 
 
     public void update() {
-        if (keyH.upPressed) {
-            direction = "up";
-            y -= heroSpeed;
-        }
-        else if (keyH.downPressed) {
-            direction = "down";
-            y += heroSpeed;
-        }
-        else if (keyH.leftPressed) {
-            direction = "left";
-            x -= heroSpeed;
-        }
-        else if (keyH.rightPressed) {
-            direction = "right";
-            x += heroSpeed;
-        }
 
+        if (keyH.upPressed  == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
+            if (keyH.upPressed) {
+                direction = "up";
+
+            }
+            else if (keyH.downPressed) {
+                direction = "down";
+            }
+            else if (keyH.leftPressed) {
+                direction = "left";
+            }
+            else if (keyH.rightPressed) {
+                direction = "right";
+            }
+
+            collision = false;
+            gamePanel.cChecker.checkTile(this);
+
+
+            if (collision == false) {
+                switch (direction) {
+                    case "up":
+                        y -= heroSpeed;
+                        break;
+                    case "down":
+                        y += heroSpeed;
+                        break;
+                    case "left":
+                        x -= heroSpeed;
+                        break;
+                    case "right":
+                        x += heroSpeed;
+                        break;
+                }
+            }
+        }
 
     }
 
