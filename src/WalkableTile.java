@@ -12,7 +12,7 @@ public class WalkableTile extends Tile{
      * The character used to visually represent a walkable tile on the board.
      * A space character (' ') is used to indicate open floor.
      */
-    private final char type = ' ';
+    public final char type = ' ';
 
     /**
      * Indicates whether this tile can be walked on.

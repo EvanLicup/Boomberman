@@ -8,7 +8,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // SCREEN SETTINGS
     final int originalTileSize = 32;
-    final int scale = 2;
+    final int scale = 3;
 
     public final int tileSize = originalTileSize * scale; // 48x48 tile
     final int maxScreenCol = 20;
@@ -17,11 +17,12 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenHeight = maxScreenRow * tileSize;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
+    public CollisionChecker cChecker = new CollisionChecker(this);
     Hero hero = new Hero(10,10,3, this, keyHandler);
 
 
     char[][] inputMap = {
-            {'B','T','T','T','T','T','T','T','T','T','T','T', 'B'},
+            {'1','T','T','T','T','T','T','T','T','T','T','T', '2'},
             {'L','D',' ','D',' ',' ','D',' ',' ','D','D',' ', 'R'},
             {'L','D','I',' ','I','D','I','D','I',' ','I',' ', 'R'},
             {'L',' ',' ','D',' ',' ','D',' ','D',' ','D','D', 'R'},
@@ -29,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
             {'L','D',' ','D','D',' ','D','D',' ','D',' ',' ', 'R'},
             {'L',' ','I','D','I',' ','I',' ','I','D','I','D', 'R'},
             {'L','D',' ',' ','D',' ',' ',' ','D','D','D',' ', 'R'},
-            {'B','B','B','B','B','B','B','B','B','B','B','B', 'B'}
+            {'3','B','B','B','B','B','B','B','B','B','B','B', '4'}
     };
 
 
@@ -40,7 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public BufferedImage heroUp, heroDown, heroLeft, heroRight, heroIdle, heroDeath,
                         basicTile, slipperyTile, breakableTile, barrierTile, indestructibleTile,
-                        borderTopLeft, borderTopRight, borderLeftLine, borderRightLine, borderBottomLeft, borderBottomRight;
+                        borderTopLeft, borderTopRight, borderLeftLine, borderRightLine, borderBottomLeft, borderBottomRight, borderTop, borderBottom;
 
 
 
@@ -53,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.tiles = new Tile[inputMap.length][inputMap[0].length];
         getHeroImage();
         getBlocksImage();
+        initializeTiles();
 
     }
 
@@ -64,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void run () {
 
-        double drawInterval = 1000000000 /60.0;
+        double drawInterval = 1000000000 / 60.0;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -138,12 +140,16 @@ public class GamePanel extends JPanel implements Runnable {
             slipperyTile = ImageIO.read(getClass().getResourceAsStream("/blocks/slipperyTile_32.png"));
             breakableTile = ImageIO.read(getClass().getResourceAsStream("/blocks/breakableTile.png"));
             indestructibleTile = ImageIO.read(getClass().getResourceAsStream("/blocks/barrierTile_32.png"));
-            borderTopLeft = ImageIO.read(getClass().getResourceAsStream("/blocks/borderLeft.png"));
-            borderTopRight = ImageIO.read(getClass().getResourceAsStream("/blocks/borderRight.png"));
+            borderTopLeft = ImageIO.read(getClass().getResourceAsStream("/blocks/borderTopLeft.png"));
+            borderTopRight = ImageIO.read(getClass().getResourceAsStream("/blocks/borderTopRight.png"));
             borderLeftLine = ImageIO.read(getClass().getResourceAsStream("/blocks/borderLeftLine.png"));
             borderRightLine = ImageIO.read(getClass().getResourceAsStream("/blocks/borderRightLine.png"));
             borderBottomLeft = ImageIO.read(getClass().getResourceAsStream("/blocks/borderBottomLeft.png"));
             borderBottomRight = ImageIO.read(getClass().getResourceAsStream("/blocks/borderBottomRight.png"));
+            borderBottom = ImageIO.read(getClass().getResourceAsStream("/blocks/borderBottom.png"));
+            borderTop = ImageIO.read(getClass().getResourceAsStream("/blocks/borderTop.png"));
+
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -151,37 +157,96 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     }
-    
 
-    public void drawTiles (Graphics g) {
-
+    public void initializeTiles() {
 
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
-                if (inputMap[i][j] == 'I') {
-                    g.drawImage(indestructibleTile, i * tileSize, j * tileSize, tileSize, tileSize, null);
-                }
-                else if (inputMap[i][j] == 'D') {
-                    g.drawImage(basicTile, i * tileSize, j * tileSize, tileSize, tileSize, null);
-                    g.drawImage(breakableTile, i * tileSize, j * tileSize, tileSize, tileSize, null);
-                }
-                else if (inputMap[i][j] == ' ') {
-                    g.drawImage(basicTile, i * tileSize, j * tileSize, tileSize, tileSize, null);
-                }
-                else if (inputMap[i][j] == 'B') {
 
+                char c = inputMap[i][j];
+
+                if (c == 'I') {
+                    tiles[i][j] = new IndestructibleTile(i, j);
+                }
+                else if (c == 'D') {
+                    tiles[i][j] = new DestructibleTile(i, j);
+                }
+                else if (c == ' ') {
+                    tiles[i][j] = new WalkableTile(i, j);
+                }
+                else if (c == 'B') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == 'L') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == 'R') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == 'T') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == '1') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == '2') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == '3') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else if (c == '4') {
+                    tiles[i][j] = new BarrierTile(i, j);
+                }
+                else {
+                    System.out.println("Unknown char at (" + i + "," + j + ")");
+                    tiles[i][j] = null;
                 }
             }
         }
-        g.drawImage(borderTopLeft, 0, 0, tileSize, tileSize, null);
-
-        g.drawImage(borderLeftLine, 0 * tileSize, 1 * tileSize, tileSize, tileSize, null);
-
-
-
-
-
     }
+
+
+    public void drawTiles(Graphics g) {
+
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+
+                char c = inputMap[i][j];
+
+                if (c == 'I') {
+                    g.drawImage(indestructibleTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == 'D') {
+                    g.drawImage(basicTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                    g.drawImage(breakableTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == ' ') {
+                    g.drawImage(basicTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == 'B') {
+                    g.drawImage(borderBottom, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == 'L') {
+                    g.drawImage(borderLeftLine, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == 'R') {
+                    g.drawImage(borderRightLine, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == 'T') {
+                    g.drawImage(borderTop, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == '1') {
+                    g.drawImage(borderTopLeft, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == '2') {
+                    g.drawImage(borderTopRight, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == '3') {
+                    g.drawImage(borderBottomLeft, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                } else if (c == '4') {
+                    g.drawImage(borderBottomRight, j * tileSize, i * tileSize, tileSize, tileSize, null);
+                }
+            }
+        }
+    }
+
+
+
+
+
+
 
 
 
