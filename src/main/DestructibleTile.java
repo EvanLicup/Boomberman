@@ -1,7 +1,9 @@
+package main;
+
 /**
- * The DestructibleTile class represents a tile that initially blocks movement
+ * The main.DestructibleTile class represents a tile that initially blocks movement
  * but can be destroyed by a bomb explosion. Once destroyed, the tile becomes
- * walkable, allowing the Hero to pass through its position.
+ * walkable, allowing the main.Hero to pass through its position.
  *
  */
 public class DestructibleTile extends Tile {

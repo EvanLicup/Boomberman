@@ -1,8 +1,9 @@
+package main;
+
 import javax.swing.*;
-import java.util.Scanner;
 
 /**
- * The Boomberman class contains the main method that runs the Bomberman-Inspired game.
+ * The main.Boomberman class contains the main method that runs the Bomberman-Inspired game.
  * It initializes the game board, hero, and bomb, then loops to process
  * player input, update the game state, and display the board until the
  * game ends.
@@ -10,13 +11,13 @@ import java.util.Scanner;
 public class Boomberman {
 
     /**
-     * Main method: entry point of the Boomberman game.
+     * Main method: entry point of the main.Boomberman game.
      * Initializes the board, hero, bomb, and input scanner.
      * Runs the main game loop that does the ff:
      * - UI/Board Display
      * - Player Input
-     * - Delegates movement or bomb placement to the Hero object
-     * - Updates bomb countdown and explosion via Bomb methods
+     * - Delegates movement or bomb placement to the main.Hero object
+     * - Updates bomb countdown and explosion via object.Bomb methods
      * - Checks Win/Loss condiitons
      *
      * @param args command-line arguments (not used)
@@ -44,13 +45,13 @@ public class Boomberman {
 
 
         // Initialize the tile board and game objects
-        Tile[][] TileMap = new Tile[rows][cols];
-        GameBoard mainBoard = new GameBoard(inputMap, inputMap.length, inputMap[0].length, TileMap);
+        main.Tile[][] TileMap = new main.Tile[rows][cols];
+        main.GameBoard mainBoard = new main.GameBoard(inputMap, inputMap.length, inputMap[0].length, TileMap);
         // Initialize bomb at (0,0) with countdown = 4.
         // Note: isActive is false by default, so it won't affect the board
         // until the hero places it with the 'H' command.
-        NormalBomb bomb = new NormalBomb(0, 0, 4);
-        Hero bomberman = new Hero(6, 5, 3);          // starting position and hearts
+        main.NormalBomb bomb = new main.NormalBomb(0, 0, 4);
+        main.Hero bomberman = new main.Hero(6, 5, 3);          // starting position and hearts
         Scanner sc = new Scanner(System.in);
         char e; // input character
 
@@ -66,12 +67,12 @@ public class Boomberman {
 
                 // Check win condition
                 if (bomberman.getX() == mainBoard.getWinCoordinateX() && bomberman.getY() == mainBoard.getWinCoordinateY()) {
-                    System.out.println("Congratulations! You have entered the Exit Tile");
+                    System.out.println("Congratulations! You have entered the Exit main.Tile");
                     gameOver = 1;
 
                 }
 
-                // Bomb countdown and explosion
+                // object.Bomb countdown and explosion
                 if (bomberman.getActiveBombStatus()) {
                     bomb.decrementCountdown();
                 }
@@ -103,7 +104,7 @@ public class Boomberman {
 
 
         JFrame mainWindow = new JFrame();
-        mainWindow.setTitle("Boomberman");
+        mainWindow.setTitle("main.Boomberman");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setResizable(false);
         GamePanel gamePanel = new GamePanel();
@@ -122,7 +123,7 @@ public class Boomberman {
      * Displays the user interface for the hero, including controls
      * and current number of hearts.
      *
-     * @param bomberman the Hero object whose hearts are displayed
+     * @param bomberman the main.Hero object whose hearts are displayed
      */
     public static void displayUI(Hero bomberman) {
         System.out.println("Hearts Remaining: " + bomberman.getHearts());
@@ -130,7 +131,7 @@ public class Boomberman {
         System.out.println("S - Down");
         System.out.println("A - Left");
         System.out.println("D - Right");
-        System.out.println("H - Place Bomb");
+        System.out.println("H - Place object.Bomb");
         System.out.print("Enter move: ");
     }
 

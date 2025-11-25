@@ -1,10 +1,12 @@
+package main;
+
 /**
- * Represents a tile that the Hero can walk on.
+ * Represents a tile that the main.Hero can walk on.
  * This tile is always destructible and initially walkable.
  * <p>
  * In the context of bomberman-style mechanics, a walkable tile may be
  * temporarily set to non-walkable when a bomb is placed on top of it,
- * preventing the Hero from occupying the same tile until the bomb explodes.
+ * preventing the main.Hero from occupying the same tile until the bomb explodes.
  * After the explosion, it becomes walkable again.
  */
 public class WalkableTile extends Tile{
@@ -33,7 +35,7 @@ public class WalkableTile extends Tile{
 
     // Get info if tile is walkable and destructible
     /**
-     * Indicates whether this tile can be walked on by the Hero.
+     * Indicates whether this tile can be walked on by the main.Hero.
      *
      * @return true if the tile allows movement, false otherwise
      */
@@ -45,7 +47,7 @@ public class WalkableTile extends Tile{
      * Updates the walkability of this tile.
      *
      * <p>This is commonly used when a bomb is placed on the tile. The tile becomes
-     * temporarily non-walkable so that the Hero cannot move back onto it, mimicking
+     * temporarily non-walkable so that the main.Hero cannot move back onto it, mimicking
      * traditional Bomberman movement rules. After the bomb explodes, the tile may
      * be restored to walkable status by using this method and setting back walkability to true.</p>
      *

@@ -1,5 +1,7 @@
+package main;
+
 /**
- * The IndestructibleTile class represents a permanent wall or barrier
+ * The main.IndestructibleTile class represents a permanent wall or barrier
  * that cannot be destroyed by bombs and never becomes walkable.
  *
  * <p>These tiles are typically the fixed internal pillars similar to
