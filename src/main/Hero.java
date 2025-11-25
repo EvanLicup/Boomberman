@@ -1,3 +1,7 @@
+package main;
+
+import object.Bomba;
+
 import java.awt.*;
 
 /**
@@ -22,6 +26,7 @@ public class Hero {
     private boolean hasActiveBomb = false;
 
 
+
     // ADDED
     private int heroSpeed = 5;
     public String direction = "left";
@@ -29,13 +34,13 @@ public class Hero {
     GamePanel gamePanel;
     KeyHandler keyH;
 
-    public Rectangle hitBox = new Rectangle(8,16,8, 8);
+    public Rectangle hitBox = new Rectangle(32, 48, 32, 42);
     boolean collision = false;
 
 
 
     /**
-     * Constructs a Hero object and initializes its starting position and hearts.
+     * Constructs a main.Hero object and initializes its starting position and hearts.
      *
      * @param x      the initial row position of the hero
      * @param y      the initial column position of the hero
@@ -94,6 +99,7 @@ public class Hero {
      * @param board the game board used to check boundaries and walkability
      * @return {@code true} if the target tile is inside bounds and walkable, {@code false} otherwise
      */
+    /*
     public boolean isValidated(int moveX, int moveY, GameBoard board) {
         if (moveX < 0 || moveX >= board.getRows() || moveY < 0 || moveY >= board.getCols()) {
             return false;
@@ -107,66 +113,7 @@ public class Hero {
         return true;
     }
 
-    /**
-     * Moves the hero based on the key pressed and optionally places a bomb.
-     * Movement keys are W, A, S, D (or lowercase variants).
-     * Pressing H places a bomb on the current tile if no other bomb is active.
-     *
-     * @param keyPressed the character representing the player's movement or action input
-     * @param board      the current game board used for movement validation
-     * @param placedBomb the bomb object to be placed when 'H' is pressed
-     *
-     * Precondition: No other bomb is currently active when placing a new one.
      */
-    public void moveHero(char keyPressed, GameBoard board, Bomb placedBomb) {
-
-        switch (keyPressed) {
-            case 'w':
-            case 'W':
-                if (isValidated(x - 1, y, board)) {
-                    x -= 1;
-                }
-                break;
-            case 's':
-            case 'S':
-                if (isValidated(x + 1, y, board)) {
-                    x += 1;
-                }
-                break;
-            case 'a':
-            case 'A':
-                if (isValidated(x, y - 1, board)) {
-                    y -= 1;
-                }
-                break;
-            case 'd':
-            case 'D':
-                if (isValidated(x, y + 1, board)) {
-                    y += 1;
-                }
-                break;
-            case 'h':
-            case 'H':
-
-
-                if (!getActiveBombStatus()) {
-                    placedBomb.activate();
-                    setHasActiveBomb(true);
-                    placedBomb.setRowIndex(x);
-                    placedBomb.setColIndex(y);
-                    board.tileBoard[x][y].setWalkable(false);
-                    /* setWalkable added back and working, setWalkable back to true is put on NormalBomb.explode,
-                       so it appears to be simultaneously breaking the nearby D tiles and the bomb disappearing
-                     */
-                }
-                
-                
-                break;
-
-
-        }
-
-    }
 
 
     /** Updates the hero's active bomb status.
@@ -194,7 +141,6 @@ public class Hero {
         if (keyH.upPressed  == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rightPressed == true) {
             if (keyH.upPressed) {
                 direction = "up";
-
             }
             else if (keyH.downPressed) {
                 direction = "down";
@@ -228,7 +174,16 @@ public class Hero {
             }
         }
 
+        if (keyH.placePressed == true) {
+            int centerX = getX() + gamePanel.tileSize/ 2;
+            int centerY = getY() + gamePanel.tileSize/ 2;
+            Bomba b = new Bomba(centerX/ gamePanel.tileSize,centerY / gamePanel.tileSize, 3.0);
+            gamePanel.bombs.add(b);
+            keyH.placePressed = false;
+        }
+
     }
+
 
 
 

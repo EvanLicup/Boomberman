@@ -1,3 +1,5 @@
+package main;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -51,9 +53,6 @@ public class KeyHandler implements KeyListener {
         }
         else if (key == KeyEvent.VK_D) {
             rightPressed = false;
-        }
-        else if (key == KeyEvent.VK_H) {
-            placePressed = false;
         }
         else if (key == KeyEvent.VK_J) {
             detonatePressed = false;

@@ -1,5 +1,7 @@
+package main;
+
 /**
- * The Tile class serves as the base class for all terrain types on the game board.
+ * The main.Tile class serves as the base class for all terrain types on the game board.
  * Each tile tracks its position on the board and defines how it behaves in terms
  * of walkability and destructibility.
  *
@@ -30,7 +32,7 @@ public abstract class Tile {
     }
 
     /**
-     * Indicates whether this tile can be walked on by the Hero.
+     * Indicates whether this tile can be walked on by the main.Hero.
      *
      * @return true if the tile allows movement, false otherwise
      */
@@ -40,7 +42,7 @@ public abstract class Tile {
      * Updates the walkability of this tile.
      *
      * <p>This is commonly used when a bomb is placed on the tile. The tile becomes
-     * temporarily non-walkable so that the Hero cannot move back onto it, mimicking
+     * temporarily non-walkable so that the main.Hero cannot move back onto it, mimicking
      * traditional Bomberman movement rules. After the bomb explodes, the tile may
      * be restored to walkable status by using this method and setting back walkability to true.</p>
      * @param walkability true if the tile should become walkable again, false otherwise

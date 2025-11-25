@@ -1,8 +1,12 @@
+package main;
+
+import object.Bomba;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 
@@ -11,26 +15,30 @@ public class GamePanel extends JPanel implements Runnable {
     final int scale = 3;
 
     public final int tileSize = originalTileSize * scale; // 48x48 tile
-    final int maxScreenCol = 20;
-    final int maxScreenRow = 20;
+    final int maxScreenCol = 17;
+    final int maxScreenRow = 11;
     final int screenWidth = maxScreenCol * tileSize;
     final int screenHeight = maxScreenRow * tileSize;
     Thread gameThread;
     KeyHandler keyHandler = new KeyHandler();
     public CollisionChecker cChecker = new CollisionChecker(this);
+    ArrayList<Bomba>bombs = new ArrayList<>();
     Hero hero = new Hero(10,10,3, this, keyHandler);
 
 
+
     char[][] inputMap = {
-            {'1','T','T','T','T','T','T','T','T','T','T','T', '2'},
-            {'L','D',' ','D',' ',' ','D',' ',' ','D','D',' ', 'R'},
-            {'L','D','I',' ','I','D','I','D','I',' ','I',' ', 'R'},
-            {'L',' ',' ','D',' ',' ','D',' ','D',' ','D','D', 'R'},
-            {'L',' ','I',' ','I','D','I',' ','I',' ','I','D', 'R'},
-            {'L','D',' ','D','D',' ','D','D',' ','D',' ',' ', 'R'},
-            {'L',' ','I','D','I',' ','I',' ','I','D','I','D', 'R'},
-            {'L','D',' ',' ','D',' ',' ',' ','D','D','D',' ', 'R'},
-            {'3','B','B','B','B','B','B','B','B','B','B','B', '4'}
+            {'1','T','T','T','T','T','T','T','T','T','T','T','T','T','T','T','2'},
+            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','D','R'},
+            {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
+            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','R'},
+            {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
+            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','R'},
+            {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
+            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','D',' ','R'},
+            {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I','D','R'},
+            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','D','D','R'},
+            {'3','B','B','B','B','B','B','B','B','B','B','B','B','B','B','B','4'}
     };
 
 
@@ -41,7 +49,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     public BufferedImage heroUp, heroDown, heroLeft, heroRight, heroIdle, heroDeath,
                         basicTile, slipperyTile, breakableTile, barrierTile, indestructibleTile,
-                        borderTopLeft, borderTopRight, borderLeftLine, borderRightLine, borderBottomLeft, borderBottomRight, borderTop, borderBottom;
+                        borderTopLeft, borderTopRight, borderLeftLine, borderRightLine, borderBottomLeft, borderBottomRight, borderTop, borderBottom,
+                        normalBomb;
 
 
 
@@ -54,6 +63,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.tiles = new Tile[inputMap.length][inputMap[0].length];
         getHeroImage();
         getBlocksImage();
+        getObjectImage();
         initializeTiles();
 
     }
@@ -68,6 +78,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         double drawInterval = 1000000000 / 60.0;
         double delta = 0;
+        double deltaBomb = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
@@ -75,21 +86,29 @@ public class GamePanel extends JPanel implements Runnable {
         while (gameThread != null) {
             currentTime = System.nanoTime();
             delta += (currentTime - lastTime) / drawInterval;
+            deltaBomb += (currentTime - lastTime) / 1000000000.0;
             lastTime = currentTime;
 
             if (delta >= 1) {
-                update();
+                update(deltaBomb);
                 repaint();
                 delta--;
+                deltaBomb = 0;
             }
 
 
         }
     }
 
-    public void update() {
+    public void update(double delta) {
         hero.update();
 
+        for (int i = 0; i < bombs.size(); i++) {
+            Bomba b = bombs.get(i);
+            b.decreaseTime(delta);
+        }
+
+        bombs.removeIf(b -> b.exploded);
 
     }
 
@@ -123,10 +142,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void getHeroImage () {
         try {
-            heroUp = ImageIO.read(getClass().getResourceAsStream("/hero/Sprite_Heart.png"));
-            heroDown = ImageIO.read(getClass().getResourceAsStream("/hero/Sprite_Heart.png"));
-            heroLeft = ImageIO.read(getClass().getResourceAsStream("/hero/Sprite_Heart.png"));
-            heroRight = ImageIO.read(getClass().getResourceAsStream("/hero/Sprite_Heart.png"));
+            heroUp = ImageIO.read(getClass().getResourceAsStream("/hero/heroUp.png"));
+            heroDown = ImageIO.read(getClass().getResourceAsStream("/hero/heroDown.png"));
+            heroLeft = ImageIO.read(getClass().getResourceAsStream("/hero/heroLeft.png"));
+            heroRight = ImageIO.read(getClass().getResourceAsStream("/hero/heroRight.png"));
 
         }
         catch (Exception e) {
@@ -137,9 +156,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void getBlocksImage () {
         try {
             basicTile = ImageIO.read(getClass().getResourceAsStream("/blocks/tile.png"));
-            slipperyTile = ImageIO.read(getClass().getResourceAsStream("/blocks/slipperyTile_32.png"));
+            slipperyTile = ImageIO.read(getClass().getResourceAsStream("/blocks/slipperyTile.png"));
             breakableTile = ImageIO.read(getClass().getResourceAsStream("/blocks/breakableTile.png"));
-            indestructibleTile = ImageIO.read(getClass().getResourceAsStream("/blocks/barrierTile_32.png"));
+            indestructibleTile = ImageIO.read(getClass().getResourceAsStream("/blocks/indestructibleTile.png"));
             borderTopLeft = ImageIO.read(getClass().getResourceAsStream("/blocks/borderTopLeft.png"));
             borderTopRight = ImageIO.read(getClass().getResourceAsStream("/blocks/borderTopRight.png"));
             borderLeftLine = ImageIO.read(getClass().getResourceAsStream("/blocks/borderLeftLine.png"));
@@ -156,6 +175,15 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
 
+    }
+
+    public void getObjectImage () {
+        try {
+            normalBomb = ImageIO.read(getClass().getResourceAsStream("/objects/bomb.png"));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void initializeTiles() {
@@ -212,45 +240,42 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
 
-                char c = inputMap[i][j];
+                char c = tiles[i][j].getType();
 
                 if (c == 'I') {
+                    g.drawImage(basicTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
                     g.drawImage(indestructibleTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
                 } else if (c == 'D') {
                     g.drawImage(basicTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
                     g.drawImage(breakableTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
                 } else if (c == ' ') {
                     g.drawImage(basicTile, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == 'B') {
+                } else if (inputMap[i][j] == 'B') {
                     g.drawImage(borderBottom, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == 'L') {
+                } else if (inputMap[i][j] == 'L') {
                     g.drawImage(borderLeftLine, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == 'R') {
+                } else if (inputMap[i][j] == 'R') {
                     g.drawImage(borderRightLine, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == 'T') {
+                } else if (inputMap[i][j] == 'T') {
                     g.drawImage(borderTop, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == '1') {
+                } else if (inputMap[i][j] == '1') {
                     g.drawImage(borderTopLeft, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == '2') {
+                } else if (inputMap[i][j] == '2') {
                     g.drawImage(borderTopRight, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == '3') {
+                } else if (inputMap[i][j] == '3') {
                     g.drawImage(borderBottomLeft, j * tileSize, i * tileSize, tileSize, tileSize, null);
-                } else if (c == '4') {
+                } else if (inputMap[i][j] == '4') {
                     g.drawImage(borderBottomRight, j * tileSize, i * tileSize, tileSize, tileSize, null);
                 }
             }
         }
     }
 
+    public void drawBomb(Graphics2D g2, Bomba b) {
 
 
-
-
-
-
-
-
-
+        g2.drawImage(normalBomb, b.x * tileSize, b.y * tileSize, tileSize, tileSize, null);
+    }
 
     @Override
     public void paint(Graphics g) {
@@ -260,9 +285,38 @@ public class GamePanel extends JPanel implements Runnable {
         drawTiles(g2d);
         drawHero(g2d);
 
+        System.out.println("hero x" + hero.getX() + " y" + hero.getY());
+
+        for (int i = 0; i < bombs.size(); i++) {
+            Bomba b = bombs.get(i);
+            if (b.exploded == false) {
+                drawBomb(g2d, b);
+            }
+        }
+
 
 
         g2d.dispose();
 
     }
+
+    /**
+     * Destroys a destructible tile at the specified coordinates.
+     * The tile is replaced with a main.WalkableTile, allowing movement through it.
+     *
+     * @param row the row index of the tile to destroy
+     * @param col the column index of the tile to destroy
+     * Precondition: The coordinates must be within the bounds of the board
+     */
+    /*
+    public void destroyTile(int row, int col) {
+
+        if (row >= 0 && row < rows && col >= 0 && col < cols) {
+            if (tileBoard[row][col].getType() == 'D') {
+                tileBoard[row][col] = new WalkableTile(row, col);
+            }
+        }
+    }
+
+     */
 }
