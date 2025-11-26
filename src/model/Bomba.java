@@ -27,10 +27,22 @@ public class Bomba {
         System.out.println("Checking: " + (heroRow >= row - 1 && heroRow <= row + 1) + " " +
                 (heroCol >= col - 1 && heroCol <= col + 1));
 
-        // If hero is within the 3x3 explosion area, damage them once.
-        if (heroRow >= row - 1 && heroRow <= row + 1 && heroCol >= col - 1 && heroCol <= col + 1)  {
-            gm.hero.loseHeart();
-            System.out.println("heart lost");
+        {
+            if (heroRow >= row - 1 && heroRow <= row + 1 && heroCol >= col - 1 && heroCol <= col + 1)  {
+
+                    gm.hero.loseHeart();
+                    System.out.println("heart lost");
+
+                }
+                System.out.println("Trying to destroy tiles around: " + col + "," + row);
+
+            /* Destroy surrounding tiles (cross pattern) */
+                gm.destroyTile(col, row + 1);
+                gm.destroyTile(col, row - 1);
+                gm.destroyTile(col + 1, row);
+                gm.destroyTile(col - 1, row);
+
+
         }
 
         System.out.println("Trying to destroy tiles around: " + row + "," + col);

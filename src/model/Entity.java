@@ -1,12 +1,16 @@
 package model;
 
 public class Entity {
-    private int x;
-    private int y;
-    private int speed;
-    public Entity(int x, int y, int speed) {
-        this.x = x;
-        this.y = y;
-        this.speed = speed;
+    public int x;
+    public int y;
+    protected int speed;
+
+    public int getX() {
+        return x;
     }
+    public int getY() {
+        return y;
+    }
+
+
 }

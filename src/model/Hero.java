@@ -21,7 +21,7 @@ public class Hero {
 
     // ADDED
     private int heroSpeed = 5;
-    public String direction = "left";
+    public String direction = "down";
 
     GameModel gm;
     KeyHandler keyH;
