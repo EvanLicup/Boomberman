@@ -1,4 +1,4 @@
-package main;
+package model;
 
 /**
  * The main.Tile class serves as the base class for all terrain types on the game board.
@@ -17,6 +17,7 @@ public abstract class Tile {
 
     /** The column index of the tile on the game board. */
     protected int col;
+
 
     /**
      * Constructs a tile at the specified board position.
@@ -72,6 +73,18 @@ public abstract class Tile {
      */
     public int getCol() {
         return col;
+    }
+
+    public void setBarrierType(char type){
+
+    }
+
+    public void setDestroyed() {
+
+    }
+
+    public boolean getDestroyedStatus() {
+        return true;
     }
 
 }

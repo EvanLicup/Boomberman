@@ -1,4 +1,4 @@
-package main;
+package model;
 
 /**
  * The main.DestructibleTile class represents a tile that initially blocks movement
@@ -13,6 +13,9 @@ public class DestructibleTile extends Tile {
 
     /** Indicates whether this tile can currently be walked on. */
     private boolean walkability = false;
+
+
+    private boolean destroyed = false;
 
     /**
      * Constructs a destructible tile at the specified board position.
@@ -51,5 +54,15 @@ public class DestructibleTile extends Tile {
      */
     public char getType() {
         return this.type;
+    }
+
+    @Override
+    public void setDestroyed() {
+        this.destroyed = true;
+    }
+
+    @Override
+    public boolean getDestroyedStatus() {
+        return this.destroyed;
     }
 }
