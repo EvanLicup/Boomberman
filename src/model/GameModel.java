@@ -21,16 +21,22 @@ public class GameModel {
         this.hero = new Hero(4,3,3,this, keyH);
         this.cChecker = new CollisionChecker(this);
         initializeTiles();
+        // --- AUTO SPAWN DRONES ---
+        spawnDrone(3, 3);   // drone around upper-left walkable area
+        spawnDrone(13, 3);  // drone near upper-right walkable area
+        spawnDrone(3, 7);   // drone mid-left
+        spawnDrone(13, 7);  // drone mid-right
+        // -------------------------
     }
 
     char[][] inputMap = {
             {'1','T','T','T','T','T','T','T','T','T','T','T','T','T','T','T','2'},
             {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','D','R'},
+            {'L',' ','I',' ','I',' ','I',' ','I','D','I',' ','I',' ','I',' ','R'},
+            {'L',' ',' ',' ',' ',' ',' ','D',' ',' ',' ',' ',' ',' ',' ',' ','R'},
             {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
-            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','R'},
-            {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
-            {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','R'},
-            {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
+            {'L','D','D',' ',' ','D',' ',' ',' ','D',' ',' ',' ',' ',' ',' ','R'},
+            {'L','D','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','R'},
             {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','D',' ','R'},
             {'L',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I',' ','I','D','R'},
             {'L',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','D','D','R'},
@@ -96,20 +102,33 @@ public class GameModel {
 
 
     public void update(double delta) {
+        // update player
         hero.update();
 
+        // update drones (if any)
+        if (drones != null) {
+            for (int i = 0; i < drones.size(); i++) {
+                try {
+                    drones.get(i).update();
+                } catch (Exception e) {
+                    // robust: if a drone throws, keep going
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // update bombs
         for (int i = 0; i < bombs.size(); i++) {
             Bomba b = bombs.get(i);
             b.decreaseTime(delta);
         }
 
+        // remove exploded bombs (keeps bombs list clean)
         bombs.removeIf(b -> b.exploded);
 
     }
 
     public void destroyTile(int row, int col) {
-
-
 
         if (row >= 0 && row < tiles.length && col >= 0 && col < tiles[row].length) {
             if (tiles[row][col].getType() == 'D') {
@@ -119,5 +138,17 @@ public class GameModel {
         System.out.println("Destroyed tile " + row + "," + col);
     }
 
+    // collection for enemy drones (bots)
+    public ArrayList<drone> drones = new ArrayList<>();
+
+    /**
+     * Convenience helper to spawn a drone at a given tile coordinate (col, row).
+     * Tile coordinates are expected (col = column index, row = row index).
+     */
+    public void spawnDrone(int col, int row) {
+        // convert col/row to drone constructor (drone expects tileCol, tileRow)
+        drone d = new drone(col, row, this);
+        drones.add(d);
+    }
 
 }

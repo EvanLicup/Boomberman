@@ -10,10 +10,10 @@ import java.awt.*;
  * and can place one active bomb at a time.
  */
 public class Hero {
-    /** Current row position of the hero on the board. */
+    /** Horizontal pixel position (X). Column = x / tileSize */
     private int x;
 
-    /** Current column position of the hero on the board. */
+    /** Vertical pixel position (Y). Row = y / tileSize */
     private int y;
 
     /** Number of hearts (lives) remaining for the hero. */
@@ -30,12 +30,11 @@ public class Hero {
     boolean collision = false;
 
 
-
     /**
      * Constructs a main.Hero object and initializes its starting position and hearts.
      *
-     * @param x      the initial row position of the hero
-     * @param y      the initial column position of the hero
+     * @param x      the initial horizontal pixel position (X). To convert tile column -> multiply by tileSize before passing
+     * @param y      the initial vertical pixel position (Y). To convert tile row -> multiply by tileSize before passing
      * @param hearts the initial number of hearts (lives) the hero starts with
      */
     public Hero(int x, int y, int hearts, GameModel gm, KeyHandler keyH) {
@@ -46,18 +45,18 @@ public class Hero {
     }
 
     /**
-     * Returns the current row position of the hero.
+     * Returns the current horizontal pixel position of the hero.
      *
-     * @return the hero's x-coordinate (row index)
+     * @return the hero's x-coordinate (pixel X)
      */
     public int getX() {
         return x;
     }
 
     /**
-     * Returns the current column position of the hero.
+     * Returns the current vertical pixel position of the hero.
      *
-     * @return the hero's y-coordinate (column index)
+     * @return the hero's y-coordinate (pixel Y)
      */
     public int getY() {
         return y;
@@ -121,7 +120,8 @@ public class Hero {
             if (hasActiveBomb == false) {
                 int centerX = getX() + gm.tileSize/ 2;
                 int centerY = getY() + gm.tileSize/ 2;
-                Bomba b = new Bomba(centerX/ gm.tileSize,centerY / gm.tileSize, 3.0, gm);
+                // pass (row, col) -> (centerY/tileSize, centerX/tileSize)
+                Bomba b = new Bomba(centerY / gm.tileSize, centerX / gm.tileSize, 3.0, gm);
                 gm.bombs.add(b);
 
             }
@@ -133,6 +133,31 @@ public class Hero {
 
 
 
+
+    // Helper getters for clarity (pixel vs tile coords)
+
+    // Return raw pixel coords (sprite top-left)
+    public int getPixelX() { return x; }
+    public int getPixelY() { return y; }
+
+    // Return hero center pixel (uses hitBox) - robust reference for tile occupancy
+    public int getCenterPixelX() {
+        return this.getX() + this.hitBox.x + (this.hitBox.width / 2);
+    }
+
+    public int getCenterPixelY() {
+        return this.getY() + this.hitBox.y + (this.hitBox.height / 2);
+    }
+
+    // Convert the center pixel to tile column/row using integer division
+    public int getTileCol() {
+        // column = center pixel X / tileSize
+        return getCenterPixelX() / gm.tileSize;
+    }
+    public int getTileRow() {
+        // row = center pixel Y / tileSize
+        return getCenterPixelY() / gm.tileSize;
+    }
 
     public int getHeroSpeed() {
         return heroSpeed;

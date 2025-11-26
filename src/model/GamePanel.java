@@ -17,15 +17,10 @@ public class GamePanel extends JPanel {
 
     Tile[][] tiles;
 
-
-
-
-
     public BufferedImage heroUp, heroDown, heroLeft, heroRight, heroIdle, heroDeath,
                         basicTile, slipperyTile, breakableTile, barrierTile, indestructibleTile,
                         borderTopLeft, borderTopRight, borderLeftLine, borderRightLine, borderBottomLeft, borderBottomRight, borderTop, borderBottom,
-                        normalBomb;
-
+                        normalBomb, playerTile, droneUp, droneDown, droneLeft, droneRight;
 
 
     public GamePanel(GameModel gm) {
@@ -39,7 +34,7 @@ public class GamePanel extends JPanel {
         this.addKeyListener(gm.keyH);
         this.setFocusable(true);
 
-        getHeroImage();
+        getEntitiesImage();
         getBlocksImage();
         getObjectImage();
 
@@ -48,12 +43,6 @@ public class GamePanel extends JPanel {
 
 
     public void drawHero (Graphics g) {
-        /*
-        g.setColor(Color.white);
-        g.fillRect(hero.getX(), hero.getY(), tileSize, tileSize);
-
-         */
-
         BufferedImage image = null;
 
         switch(gm.hero.direction) {
@@ -71,16 +60,25 @@ public class GamePanel extends JPanel {
                 break;
         }
         g.drawImage(image, gm.hero.getX(), gm.hero.getY(), gm.tileSize, gm.tileSize, null);
-
-
     }
 
-    public void getHeroImage () {
+    public void getEntitiesImage () {
         try {
             heroUp = ImageIO.read(getClass().getResourceAsStream("/hero/heroUp.png"));
             heroDown = ImageIO.read(getClass().getResourceAsStream("/hero/heroDown.png"));
             heroLeft = ImageIO.read(getClass().getResourceAsStream("/hero/heroLeft.png"));
             heroRight = ImageIO.read(getClass().getResourceAsStream("/hero/heroRight.png"));
+
+            // load drone sprites (in /res/drone/ or adjust path)
+            try {
+                droneUp = ImageIO.read(getClass().getResourceAsStream("/drone/droneup.png"));
+                droneDown = ImageIO.read(getClass().getResourceAsStream("/drone/dronedown.png"));
+                droneLeft = ImageIO.read(getClass().getResourceAsStream("/drone/droneleft.png"));
+                droneRight = ImageIO.read(getClass().getResourceAsStream("/drone/droneright.png"));
+            } catch (Exception e) {
+                // if drone images not found, set null; drawDrones will fallback to rectangle
+                droneUp = droneDown = droneLeft = droneRight = null;
+            }
 
         }
         catch (Exception e) {
@@ -103,6 +101,13 @@ public class GamePanel extends JPanel {
             borderBottom = ImageIO.read(getClass().getResourceAsStream("/blocks/borderBottom.png"));
             borderTop = ImageIO.read(getClass().getResourceAsStream("/blocks/borderTop.png"));
 
+            // load player-highlight tile (base tile to show hero occupancy)
+            try {
+                playerTile = ImageIO.read(getClass().getResourceAsStream("/blocks/playertile.png"));
+            } catch (Exception e) {
+                // if playertile not found, leave null and fallback overlay will be used when drawing
+                playerTile = null;
+            }
 
         }
         catch (Exception e) {
@@ -120,22 +125,96 @@ public class GamePanel extends JPanel {
         }
     }
 
+    // Draw all drones (if gm.drones is present)
+    public void drawDrones(Graphics g) {
+        if (gm == null) return;
+        try {
+            if (gm.drones == null) return;
+            for (int i = 0; i < gm.drones.size(); i++) {
+                drone d = gm.drones.get(i);
+                // ensure sprites are set on drone (non-destructive)
+                if (d.spriteUp == null && droneUp != null) {
+                    d.setSprites(droneUp, droneDown, droneLeft, droneRight);
+                }
+                BufferedImage spr = d.getCurrentSprite();
+                if (spr != null) {
+                    g.drawImage(spr, d.getX(), d.getY(), gm.tileSize, gm.tileSize, null);
+                } else {
+                    // fallback: draw a magenta rectangle so you can see the drone
+                    g.setColor(Color.MAGENTA);
+                    g.fillRect(d.getX(), d.getY(), gm.tileSize, gm.tileSize);
+                }
+            }
+        } catch (Exception e) {
+            // keep drawing robust even if drones list isn't present or a drone throws
+        }
+    }
+
     public void drawTiles(Graphics g) {
+
+        // compute hero tile indices once (guard nulls)
+        int heroRow = -1;
+        int heroCol = -1;
+        if (gm != null && gm.hero != null) {
+            heroRow = gm.hero.getTileRow();
+            heroCol = gm.hero.getTileCol();
+        }
+
+        // decide if hero is in danger from any currently active bomb (range = 1, cross pattern)
+        boolean heroInDanger = false;
+        if (gm != null && gm.bombs != null && gm.hero != null) {
+            for (Bomba b : gm.bombs) {
+                if (!b.exploded) {
+                    int br = b.getRow();
+                    int bc = b.getCol();
+                    if (heroRow >= br - 1 && heroRow <= br + 1 && heroCol >= bc - 1 && heroCol <= bc + 1) {
+                        heroInDanger = true;
+                        break;
+                    }
+                }
+            }
+        }
 
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[i].length; j++) {
 
                 char c = tiles[i][j].getType();
 
+                // determine if this tile is hero's tile
+                boolean isHeroTile = (i == heroRow && j == heroCol);
+
+                // determine if this tile is within any bomb's range (explosion radius overlay)
+                boolean tileInBombRange = false;
+                if (gm != null && gm.bombs != null) {
+                    for (Bomba b : gm.bombs) {
+                        if (!b.exploded) {
+                            int br = b.getRow();
+                            int bc = b.getCol();
+                            // cross pattern: center + up/down/left/right
+                            if ((i == br && j == bc) ||
+                                (i == br + 1 && j == bc) ||
+                                (i == br - 1 && j == bc) ||
+                                (i == br && j == bc + 1) ||
+                                (i == br && j == bc - 1)) {
+                                tileInBombRange = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // When drawing the base "basicTile", if hero stands on it we draw playerTile instead.
+                BufferedImage baseForBasic = isHeroTile && playerTile != null ? playerTile : basicTile;
+
                 if (c == 'I') {
-                    g.drawImage(basicTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
+                    g.drawImage(baseForBasic, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                     g.drawImage(indestructibleTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 } else if (c == 'D') {
-                    g.drawImage(basicTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
+                    g.drawImage(baseForBasic, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                     if (tiles[i][j].getDestroyedStatus() == false)
-                    g.drawImage(breakableTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
+                        g.drawImage(breakableTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 } else if (c == ' ') {
-                    g.drawImage(basicTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
+                    g.drawImage(baseForBasic, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 } else if (c == 'B') {
                     g.drawImage(borderBottom, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 } else if (c == 'L') {
@@ -154,15 +233,56 @@ public class GamePanel extends JPanel {
                     g.drawImage(borderBottomRight, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 }
 
-
+                // Explosion radius overlay (translucent red) for tiles in any bomb's range
+                if (tileInBombRange) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    Composite old = g2.getComposite();
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f));
+                    g2.setColor(Color.RED);
+                    g2.fillRect(j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize);
+                    g2.setComposite(old);
                 }
+
+                // If this is the hero tile and playerTile image is null, draw a translucent overlay (cyan normally)
+                if (isHeroTile && playerTile == null) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    Composite old = g2.getComposite();
+
+                    if (heroInDanger) {
+                        // pulsing alpha for danger blink (0.25 - 0.7)
+                        double t = System.currentTimeMillis() / 200.0;
+                        float pulse = (float) ((Math.sin(t) + 1.0) / 2.0); // 0..1
+                        float alpha = 0.35f + 0.35f * pulse; // 0.35..0.7
+                        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                        g2.setColor(Color.RED);
+                        g2.fillRect(j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize);
+                    } else {
+                        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.35f));
+                        g2.setColor(Color.CYAN);
+                        g2.fillRect(j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize);
+                    }
+
+                    g2.setComposite(old);
+                }
+
+                // If playerTile exists and this is hero tile and hero is in danger, overlay a pulsing red on top
+                if (isHeroTile && playerTile != null && heroInDanger) {
+                    Graphics2D g2 = (Graphics2D) g;
+                    Composite old = g2.getComposite();
+                    double t = System.currentTimeMillis() / 200.0;
+                    float pulse = (float) ((Math.sin(t) + 1.0) / 2.0); // 0..1
+                    float alpha = 0.25f + 0.45f * pulse; // e.g. 0.25..0.7
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                    g2.setColor(Color.RED);
+                    g2.fillRect(j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize);
+                    g2.setComposite(old);
+                }
+            }
         }
     }
 
     public void drawBomb(Graphics2D g2, Bomba b) {
-
-
-        g2.drawImage(normalBomb, b.getRow() * gm.tileSize, b.getCol() * gm.tileSize, gm.tileSize, gm.tileSize, null);
+        g2.drawImage(normalBomb, b.getCol() * gm.tileSize, b.getRow() * gm.tileSize, gm.tileSize, gm.tileSize, null);
     }
 
 
@@ -172,6 +292,10 @@ public class GamePanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
 
         drawTiles(g2d);
+
+        // draw drones (below hero, change order if you want drones over hero)
+        drawDrones(g2d);
+
         drawHero(g2d);
 
         for (int i = 0; i < gm.bombs.size(); i++) {
@@ -180,8 +304,6 @@ public class GamePanel extends JPanel {
                 drawBomb(g2d, b);
             }
         }
-
-
 
         g2d.dispose();
 
