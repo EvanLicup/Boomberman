@@ -9,19 +9,13 @@ import java.awt.*;
  * The hero has a position, a limited number of hearts (lives),
  * and can place one active bomb at a time.
  */
-public class Hero {
-    /** Current row position of the hero on the board. */
-    private int x;
-
-    /** Current column position of the hero on the board. */
-    private int y;
-
+public class Hero extends Entity {
     /** Number of hearts (lives) remaining for the hero. */
     private int hearts = 3;
 
     // ADDED
     private int heroSpeed = 5;
-    public String direction = "left";
+    public String direction = "down";
 
     GameModel gm;
     KeyHandler keyH;
@@ -31,37 +25,18 @@ public class Hero {
 
 
 
-    /**
-     * Constructs a main.Hero object and initializes its starting position and hearts.
-     *
-     * @param x      the initial row position of the hero
-     * @param y      the initial column position of the hero
-     * @param hearts the initial number of hearts (lives) the hero starts with
-     */
-    public Hero(int x, int y, int hearts, GameModel gm, KeyHandler keyH) {
-        this.x = x * gm.tileSize;
-        this.y = y * gm.tileSize;
+
+    public Hero(GameModel gm, KeyHandler keyH) {
         this.gm = gm;
         this.keyH = keyH;
     }
 
-    /**
-     * Returns the current row position of the hero.
-     *
-     * @return the hero's x-coordinate (row index)
-     */
-    public int getX() {
-        return x;
+    public void setDefaultValues() {
+        x = 100;
+        y = 400;
+        speed = heroSpeed;
     }
 
-    /**
-     * Returns the current column position of the hero.
-     *
-     * @return the hero's y-coordinate (column index)
-     */
-    public int getY() {
-        return y;
-    }
 
     /** @return the remaining hearts of the hero */
     public int getHearts() {

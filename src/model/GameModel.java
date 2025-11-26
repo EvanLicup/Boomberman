@@ -12,13 +12,13 @@ public class GameModel {
     final int scale = 3;
     KeyHandler keyH;
 
-    public final int tileSize = originalTileSize * scale; // 48x48 tile
+    public final int tileSize = originalTileSize * scale;
     public Hero hero;
 
     public GameModel(KeyHandler keyH) {
         this.keyH = keyH;
         this.tiles = new Tile[inputMap.length][inputMap[0].length];
-        this.hero = new Hero(4,3,3,this, keyH);
+        this.hero = new Hero(this, keyH);
         this.cChecker = new CollisionChecker(this);
         initializeTiles();
     }

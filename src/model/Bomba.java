@@ -25,12 +25,6 @@ public class Bomba {
                 (heroCol >= col - 1 && heroCol <= col + 1));
 
         {
-            // row = 9, col = 5, hero at 9,6:
-             // true
-             // true
-             // true
-             // true
-            // what is wrong then ????
             if (heroRow >= row - 1 && heroRow <= row + 1 && heroCol >= col - 1 && heroCol <= col + 1)  {
 
                     gm.hero.loseHeart();
