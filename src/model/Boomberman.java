@@ -6,28 +6,29 @@ import gamethread.Gamethread;
 import javax.swing.*;
 
 /**
- * The main.Boomberman class contains the main method that runs the Bomberman-Inspired game.
- * It initializes the game board, hero, and bomb, then loops to process
- * player input, update the game state, and display the board until the
- * game ends.
+ * The Boomberman class contains the main method that runs the Bomberman-inspired game.
+ * <p>
+ * It initializes the game window, game model, key inputs, and game panel,
+ * then starts the main game thread which handles updating and rendering.
  */
 public class Boomberman {
 
     /**
-     * Main method: entry point of the main.Boomberman game.
-     * Initializes the board, hero, bomb, and input scanner.
-     * Runs the main game loop that does the ff:
-     * - UI/Board Display
-     * - Player Input
-     * - Delegates movement or bomb placement to the main.Hero object
-     * - Updates bomb countdown and explosion via object.Bomb methods
-     * - Checks Win/Loss condiitons
+     * Main entry point of the Boomberman game.
+     * <p>
+     * The method performs the following:
+     * <ul>
+     *   <li>Creates the main application window</li>
+     *   <li>Initializes the {@link GameModel}, {@link GamePanel}, and {@link KeyHandler}</li>
+     *   <li>Attaches the panel to the window and makes it visible</li>
+     *   <li>Starts the {@link Gamethread} which updates and renders the game</li>
+     * </ul>
      *
      * @param args command-line arguments (not used)
      */
     public static void main(String[] args) {
         JFrame mainWindow = new JFrame();
-        mainWindow.setTitle("main.Boomberman");
+        mainWindow.setTitle("Boomberman");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setResizable(false);
 
@@ -41,17 +42,18 @@ public class Boomberman {
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
 
-        Gamethread gamethread = new Gamethread(gameModel,gamePanel);
+        Gamethread gamethread = new Gamethread(gameModel, gamePanel);
         gamethread.startGameThread();
-
-
     }
 
     /**
-     * Displays the user interface for the hero, including controls
-     * and current number of hearts.
+     * Displays UI information for the hero, such as controls or heart count.
+     * <p>
+     * NOTE: This method is currently unused and does not contain an implementation.
      *
-     * @param bomberman the main.Hero object whose hearts are displayed
+     * @param bomberman the hero whose UI information should be displayed
      */
-
+    public void displayHeroUI(Hero bomberman) {
+        // This method has no implementation (placeholder for future UI logic)
+    }
 }

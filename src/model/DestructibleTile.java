@@ -1,66 +1,77 @@
 package model;
 
 /**
- * The main.DestructibleTile class represents a tile that initially blocks movement
- * but can be destroyed by a bomb explosion. Once destroyed, the tile becomes
- * walkable, allowing the main.Hero to pass through its position.
- *
+ * Represents a tile that blocks movement until it is destroyed by a bomb explosion.
+ * <p>
+ * Once destroyed, the tile becomes walkable and allows the {@link Hero}
+ * (and other entities) to move through it.
  */
 public class DestructibleTile extends Tile {
 
-    /** The character used to represent a destructible tile on the board. */
+    /** The character representing a destructible tile on the board. */
     private final char type = 'D';
 
-    /** Indicates whether this tile can currently be walked on. */
+    /** Whether this tile can currently be walked on (initially false). */
     private boolean walkability = false;
 
-
+    /** Whether this tile has been destroyed by an explosion. */
     private boolean destroyed = false;
 
     /**
      * Constructs a destructible tile at the specified board position.
      *
-     * @param row the row index of the tile
-     * @param col the column index of the tile
+     * @param row the tile's row index
+     * @param col the tile's column index
      */
     public DestructibleTile(int row, int col) {
         super(row, col);
     }
 
-
     /**
      * Returns whether this tile can currently be walked on.
      *
-     * @return {@code true} if this tile can be walked on,
-     *         {@code false} if it is still intact and blocking movement
+     * @return {@code true} if the tile is walkable,
+     *         {@code false} if still intact and blocking movement
      */
     public boolean isWalkable() {
         return walkability;
     }
 
     /**
-     * Updates the walkability of this destructible tile.
+     * Sets whether this destructible tile is walkable.
      *
-     * @param walkability whether the tile should now be walkable
+     * @param walkability {@code true} to make the tile walkable,
+     *                    {@code false} to make it blocked
      */
     public void setWalkable(boolean walkability) {
         this.walkability = walkability;
     }
 
     /**
-     * Returns the display character used to represent this tile on the board.
+     * Returns the character used to visually represent this tile on the board.
      *
-     * @return a space character ('D') indicating a normal walkable tile
+     * @return the character 'D'
      */
     public char getType() {
         return this.type;
     }
 
+    /**
+     * Marks this tile as destroyed.
+     * <p>
+     * Once destroyed, it should usually become walkable,
+     * depending on how {@link GameModel} handles tile replacement.
+     */
     @Override
     public void setDestroyed() {
         this.destroyed = true;
     }
 
+    /**
+     * Returns whether this tile has already been destroyed.
+     *
+     * @return {@code true} if destroyed, {@code false} otherwise
+     */
     @Override
     public boolean getDestroyedStatus() {
         return this.destroyed;

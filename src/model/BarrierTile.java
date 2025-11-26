@@ -1,8 +1,30 @@
 package model;
 
-public class BarrierTile extends Tile{
+/**
+ * Represents an indestructible barrier tile on the game board.
+ * <p>
+ * A {@code BarrierTile} cannot normally be walked through and has a specific
+ * barrier type used for rendering map shapes (B, T, L, R, 1–4).
+ */
+public class BarrierTile extends Tile {
+
+    /** The character representing the specific barrier type. */
     private char type;
 
+    /**
+     * Sets the type/shape of this barrier tile.
+     * <p>
+     * Valid values include:
+     * <ul>
+     *   <li>'B' – bottom piece</li>
+     *   <li>'T' – top piece</li>
+     *   <li>'L' – left piece</li>
+     *   <li>'R' – right piece</li>
+     *   <li>'1'–'4' – corner/variant pieces</li>
+     * </ul>
+     *
+     * @param inputChar the barrier type character to assign
+     */
     @Override
     public void setBarrierType (char inputChar) {
         if (inputChar == 'B') {
@@ -31,16 +53,27 @@ public class BarrierTile extends Tile{
         }
     }
 
+    /** Whether the tile can be walked on (normally false). */
     private boolean walkability = false;
 
+    /**
+     * Creates a new {@code BarrierTile} at the specified board position.
+     *
+     * @param row the tile's row
+     * @param col the tile's column
+     */
     public BarrierTile(int row, int col) {
         super(row, col);
     }
 
+    /**
+     * Returns whether the tile is currently walkable.
+     *
+     * @return true if the tile can be walked on; false otherwise
+     */
     public boolean isWalkable() {
         return walkability;
     }
-
 
     /**
      * Updates the walkability of this indestructible tile.
@@ -52,9 +85,9 @@ public class BarrierTile extends Tile{
     }
 
     /**
-     * Returns the display character representing this tile on the board.
+     * Returns the barrier type character assigned to this tile.
      *
-     * @return the character 'I'
+     * @return the character representing the tile's type
      */
     public char getType() {
         return type;

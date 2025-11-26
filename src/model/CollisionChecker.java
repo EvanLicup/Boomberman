@@ -1,12 +1,39 @@
 package model;
 
+/**
+ * Handles collision detection between the {@link Hero} and the game's tiles.
+ * <p>
+ * The {@code CollisionChecker} determines whether the hero’s next movement
+ * would place them inside a non-walkable tile, and sets the hero's
+ * collision flag accordingly.
+ */
 public class CollisionChecker {
+
+    /** Reference to the game model containing the tile map and settings. */
     GameModel gm;
 
+    /**
+     * Creates a new {@code CollisionChecker} associated with a specific game model.
+     *
+     * @param gm the game model used for tile access and size configuration
+     */
     public CollisionChecker(GameModel gm) {
         this.gm = gm;
     }
 
+    /**
+     * Checks which tiles the hero is about to move into based on their direction and speed.
+     * <p>
+     * The method:
+     * <ul>
+     *   <li>Calculates the hero's hitbox edges</li>
+     *   <li>Converts pixel coordinates into tile coordinates</li>
+     *   <li>Identifies the two tiles in the hero's movement direction</li>
+     *   <li>Sets {@code hero.collision = true} if either tile is not walkable</li>
+     * </ul>
+     *
+     * @param hero the hero whose movement is being evaluated for collisions
+     */
     public void checkTile(Hero hero) {
         int heroLeftX = hero.getX() + hero.hitBox.x;
         int heroRightX = hero.getX() + hero.hitBox.x + hero.hitBox.width;

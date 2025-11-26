@@ -1,90 +1,116 @@
 package model;
 
 /**
- * The main.Tile class serves as the base class for all terrain types on the game board.
- * Each tile tracks its position on the board and defines how it behaves in terms
- * of walkability and destructibility.
- *
- * <p>This class is abstract because specific tile types (such as grass, wall,
- * destructible brick, or bomb overlay) each handle walkability and visual
- * representation differently. Subclasses must define whether the tile can be
- * walked on and which character is used to display it on the board.</p>
+ * The {@code Tile} class is the abstract base class for all terrain types on the
+ * Bomberman-style game board.
+ * <p>
+ * Each tile tracks its board position (row, column) and defines how it behaves
+ * regarding:
+ * <ul>
+ *     <li>Walkability — whether the hero and drones may step on this tile.</li>
+ *     <li>Destructibility — whether bombs can destroy or modify this tile.</li>
+ *     <li>Tile type — represented as a character used for rendering logic.</li>
+ * </ul>
+ * <p>
+ * Subclasses such as {@link WalkableTile}, {@link DestructibleTile},
+ * {@link IndestructibleTile}, and {@link BarrierTile} provide specific
+ * implementations for these behaviors.
+ * </p>
  */
 public abstract class Tile {
 
-    /** The row index of the tile on the game board. */
+    /** The row index of the tile on the game board grid. */
     protected int row;
 
-    /** The column index of the tile on the game board. */
+    /** The column index of the tile on the game board grid. */
     protected int col;
 
-
     /**
-     * Constructs a tile at the specified board position.
+     * Constructs a tile located at the specified grid position.
      *
-     * @param row the row index of the tile
-     * @param col the column index of the tile
+     * @param row the row index where this tile exists
+     * @param col the column index where this tile exists
      */
     public Tile(int row, int col) {
         this.row = row;
         this.col = col;
-
-
     }
 
     /**
-     * Indicates whether this tile can be walked on by the main.Hero.
+     * Returns whether entities (hero, drones, bombs, etc.) can walk onto this tile.
      *
-     * @return true if the tile allows movement, false otherwise
+     * @return {@code true} if movement is allowed, {@code false} if blocked
      */
     public abstract boolean isWalkable();
 
     /**
-     * Updates the walkability of this tile.
+     * Updates the walkability status of this tile.
+     * <p>
+     * This is commonly used when a bomb occupies a tile. During bomb placement,
+     * many Bomberman-style mechanics temporarily make the tile non-walkable so
+     * the hero cannot step back onto it until the explosion resolves.
      *
-     * <p>This is commonly used when a bomb is placed on the tile. The tile becomes
-     * temporarily non-walkable so that the main.Hero cannot move back onto it, mimicking
-     * traditional Bomberman movement rules. After the bomb explodes, the tile may
-     * be restored to walkable status by using this method and setting back walkability to true.</p>
-     * @param walkability true if the tile should become walkable again, false otherwise
+     * @param walkability {@code true} to allow movement; {@code false} to block movement
      */
     public abstract void setWalkable(boolean walkability);
 
     /**
-     * Returns the display character representing this tile on the board.
+     * Returns the character identifying this tile type (e.g., ' ', 'D', 'I', 'B', etc.).
+     * This character is used by the rendering system to determine which sprite to draw.
      *
-     * @return the tile type character
+     * @return a character representing the tile type
      */
     public abstract char getType();
 
     /**
-     * Returns the row index of this tile on the board.
+     * Returns the row index where this tile is located.
      *
-     * @return the row index
+     * @return the row index of the tile
      */
     public int getRow() {
         return row;
     }
 
     /**
-     * Returns the column index of this tile on the board.
+     * Returns the column index where this tile is located.
      *
-     * @return the column index
+     * @return the column index of the tile
      */
     public int getCol() {
         return col;
     }
 
-    public void setBarrierType(char type){
-
+    /**
+     * Optional hook used by {@link BarrierTile} subclasses to assign specific barrier types
+     * such as corners, edges, or special shapes.
+     * <p>
+     * Default implementation does nothing; subclasses override as needed.
+     *
+     * @param type the barrier type character to assign
+     */
+    public void setBarrierType(char type) {
+        // Overridden in BarrierTile
     }
 
+    /**
+     * Optional hook used mainly by destructible tiles when being destroyed by an explosion.
+     * <p>
+     * Default implementation does nothing and is overridden by classes like
+     * {@link DestructibleTile}.
+     */
     public void setDestroyed() {
-
+        // Overridden by DestructibleTile
     }
 
+    /**
+     * Returns whether this tile has been destroyed.
+     * <p>
+     * Only destructible tiles override this behavior. All other tiles return {@code true}
+     * by default as a neutral/no-op behavior.
+     *
+     * @return {@code true} if destroyed, otherwise {@code false}
+     */
     public boolean getDestroyedStatus() {
         return true;
     }
-
 }
