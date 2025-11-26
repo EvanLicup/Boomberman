@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="04bb51dd-64da-4ae9-a280-5a688678fe16" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/model/Entity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/model/drone.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bomberman-finaloutput.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Bomberman-finaloutput.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/Health1.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/Health1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/Health2.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/Health2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/Health3.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/Health3.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderBottom.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderBottom.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderBottomLeft.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderBottomLeft.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderBottomRight.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderBottomRight.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderLeftLine.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderLeftLine.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderRight.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderRight.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderRightLine.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderRightLine.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderTop.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderTop.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderTopLeft.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderTopLeft.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/borderTopRight.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/borderTopRight.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/breakableTile.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/breakableTile.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/indestructibleTile.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/indestructibleTile.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/sampleTileGrid.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/sampleTileGrid.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/slipperyTile.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/slipperyTile.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/blocks/tile.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/blocks/tile.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/hero/Sprite_heart.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/hero/heroDown.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/hero/heroDown.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/hero/heroLeft.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/hero/heroLeft.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/hero/heroRight.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/hero/heroRight.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/hero/heroUp.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/hero/heroUp.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/objects/bomb.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/bomb.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/objects/normalBomb.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/normalBomb.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/objects/normalBombFrame2.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/normalBombFrame2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/objects/walkingBomb.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/objects/walkingBombFrame2.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/walkingBombFrame2.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/KeyHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/KeyHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Bomba.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Bomba.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Boomberman.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Boomberman.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/GameModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/GameModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/GamePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/GamePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Hero.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Hero.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "EvanLicup"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/EvanLicup/Boomberman.git",
+    "accountId": "87024efd-2541-4f21-b5b4-dee355c74218"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 8
+}]]></component>
+  <component name="ProjectId" id="361W0gSOR1RETbOhZ9pMvtf12iE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MainMenu.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "bomb-bug",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="04bb51dd-64da-4ae9-a280-5a688678fe16" name="Changes" comment="" />
+      <created>1764174343864</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1764174343864</updated>
+      <workItem from="1764174344951" duration="655000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

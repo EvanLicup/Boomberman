@@ -27,7 +27,7 @@ public class Boomberman {
      */
     public static void main(String[] args) {
         JFrame mainWindow = new JFrame();
-        mainWindow.setTitle("main.Boomberman");
+        mainWindow.setTitle("Boomberman");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setResizable(false);
 

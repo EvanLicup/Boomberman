@@ -10,10 +10,10 @@ import java.awt.*;
  * and can place one active bomb at a time.
  */
 public class Hero {
-    /** Current row position of the hero on the board. */
+    /** Horizontal pixel position (X). Column = x / tileSize */
     private int x;
 
-    /** Current column position of the hero on the board. */
+    /** Vertical pixel position (Y). Row = y / tileSize */
     private int y;
 
     /** Number of hearts (lives) remaining for the hero. */
@@ -22,6 +22,7 @@ public class Hero {
     // ADDED
     private int heroSpeed = 5;
     public String direction = "left";
+    private boolean hasWalkingBombPowerup = false;
 
     GameModel gm;
     KeyHandler keyH;
@@ -29,16 +30,25 @@ public class Hero {
     public Rectangle hitBox = new Rectangle(32, 48, 32, 42);
     boolean collision = false;
 
+    // Spawn position in tiles (columns/rows used when respawning)
+    private int spawnCol = 4;
+    private int spawnRow = 3;
 
+    private boolean hasRadiusPowerup = false;
+
+    // invulnerability
+    private long invulnerableUntil = 0L; // System.currentTimeMillis() until which hero is invulnerable
 
     /**
      * Constructs a main.Hero object and initializes its starting position and hearts.
      *
-     * @param x      the initial row position of the hero
-     * @param y      the initial column position of the hero
+     * @param x      the initial horizontal pixel position (X). To convert tile column -> multiply by tileSize before passing
+     * @param y      the initial vertical pixel position (Y). To convert tile row -> multiply by tileSize before passing
      * @param hearts the initial number of hearts (lives) the hero starts with
      */
     public Hero(int x, int y, int hearts, GameModel gm, KeyHandler keyH) {
+        this.spawnCol = x;
+        this.spawnRow = y;
         this.x = x * gm.tileSize;
         this.y = y * gm.tileSize;
         this.gm = gm;
@@ -46,22 +56,32 @@ public class Hero {
     }
 
     /**
-     * Returns the current row position of the hero.
+     * Returns the current horizontal pixel position of the hero.
      *
-     * @return the hero's x-coordinate (row index)
+     * @return the hero's x-coordinate (pixel X)
      */
     public int getX() {
         return x;
     }
+        public boolean hasWalkingBombPowerup() {
+        return hasWalkingBombPowerup;
+    }
+    public void setHasWalkingBombPowerup(boolean v) {
+        hasWalkingBombPowerup = v;
+    }
 
     /**
-     * Returns the current column position of the hero.
+     * Returns the current vertical pixel position of the hero.
      *
-     * @return the hero's y-coordinate (column index)
+     * @return the hero's y-coordinate (pixel Y)
      */
     public int getY() {
         return y;
     }
+
+    // setters for external updates (network, remoteHero, etc)
+    public void setX(int x) { this.x = x; }
+    public void setY(int y) { this.y = y; }
 
     /** @return the remaining hearts of the hero */
     public int getHearts() {
@@ -110,7 +130,24 @@ public class Hero {
             }
         }
 
-        if (keyH.placePressed == true) {
+       if (keyH.placePressed == true) {
+
+        // 1. If hero has Walking Bomb powerup -> spawn a WalkingBomb (ARROW KEY CONTROL)
+        if (hasWalkingBombPowerup && (gm.walkingBombs == null || gm.walkingBombs.size() == 0)) {
+
+            int centerX = getX() + gm.tileSize / 2;
+            int centerY = getY() + gm.tileSize / 2;
+            int spawnCol = centerX / gm.tileSize;
+            int spawnRow = centerY / gm.tileSize;
+
+            WalkingBomb wb = new WalkingBomb(spawnCol, spawnRow, gm, keyH);
+            gm.walkingBombs.add(wb);
+
+            System.out.println("Spawned walking bomb at " + spawnRow + "," + spawnCol);
+        }
+
+        // 2. Otherwise place a normal bomb → NOW WITH POWERED FLAG
+        else {
             boolean hasActiveBomb = false;
             for (Bomba b : gm.bombs) {
                 if (!b.exploded) {
@@ -118,23 +155,101 @@ public class Hero {
                     break;
                 }
             }
-            if (hasActiveBomb == false) {
-                int centerX = getX() + gm.tileSize/ 2;
-                int centerY = getY() + gm.tileSize/ 2;
-                Bomba b = new Bomba(centerX/ gm.tileSize,centerY / gm.tileSize, 3.0, gm);
+
+            if (!hasActiveBomb) {
+                int centerX = getX() + gm.tileSize / 2;
+                int centerY = getY() + gm.tileSize / 2;
+                int brow = centerY / gm.tileSize;
+                int bcol = centerX / gm.tileSize;
+
+                // ⭐ PASS THE POWERUP STATE INTO THE BOMB
+                Bomba b = new Bomba(brow, bcol, 3.0, gm, this.hasWalkingBombPowerup());
                 gm.bombs.add(b);
 
+                System.out.println("[H] Placed " + (b.isPowered() ? "POWERED" : "normal") +
+                                " bomb at " + brow + "," + bcol);
             }
-            keyH.placePressed = false;
-
         }
+
+        keyH.placePressed = false;
+    }
+
 
     }
 
 
 
 
+    // Helper getters for clarity (pixel vs tile coords)
+
+    // Return raw pixel coords (sprite top-left)
+    public int getPixelX() { return x; }
+    public int getPixelY() { return y; }
+
+    // Return hero center pixel (uses hitBox) - robust reference for tile occupancy
+    public int getCenterPixelX() {
+        return this.getX() + this.hitBox.x + (this.hitBox.width / 2);
+    }
+
+    public int getCenterPixelY() {
+        return this.getY() + this.hitBox.y + (this.hitBox.height / 2);
+    }
+
+    // Convert the center pixel to tile column/row using integer division
+    public int getTileCol() {
+        // column = center pixel X / tileSize
+        return getCenterPixelX() / gm.tileSize;
+    }
+    public int getTileRow() {
+        // row = center pixel Y / tileSize
+        return getCenterPixelY() / gm.tileSize;
+    }
+
     public int getHeroSpeed() {
         return heroSpeed;
+    }
+
+    // Invulnerability helpers
+    public void makeInvulnerableForSeconds(double seconds) {
+        invulnerableUntil = System.currentTimeMillis() + (long)(seconds * 1000.0);
+    }
+
+    public boolean isInvulnerable() {
+        return System.currentTimeMillis() < invulnerableUntil;
+    }
+
+    // call to respawn at spawn point and set invulnerability
+    public void respawnAtSpawnWithInvulnerability() {
+        this.x = spawnCol * gm.tileSize;
+        this.y = spawnRow * gm.tileSize;
+        makeInvulnerableForSeconds(3.0);
+    }
+
+    // drawing helper used by GamePanel to decide whether to draw hero (for blink)
+    public boolean isDrawnThisFrame() {
+        if (!isInvulnerable()) return true;
+        // blink while invulnerable: toggle based on time
+        long t = System.currentTimeMillis();
+        return ((t / 200) % 2) == 0; // blink every 200ms
+    }
+ 
+    // hasWalkingBombPowerup already exists
+
+    public boolean hasRadiusPowerup() {
+        return hasRadiusPowerup;
+    }
+    public void setHasRadiusPowerup(boolean v) {
+        hasRadiusPowerup = v;
+    }
+
+    // add heart if under max (3)
+    public void addHeart() {
+        if (hearts < 3) hearts++;
+    }
+
+    // optionally a convenience to clear level-lifetime powerups on level change
+    public void clearLevelPowerups() {
+        hasWalkingBombPowerup = false;
+        hasRadiusPowerup = false;
     }
 }
