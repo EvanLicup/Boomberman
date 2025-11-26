@@ -1,7 +1,35 @@
 package model;
 
 public class BarrierTile extends Tile{
-    private final char type = 'B';
+    private char type;
+
+    @Override
+    public void setBarrierType (char inputChar) {
+        if (inputChar == 'B') {
+            type = 'B';
+        }
+        else if (inputChar == 'T') {
+            type = 'T';
+        }
+        else if (inputChar == 'L') {
+            type = 'L';
+        }
+        else if (inputChar == 'R') {
+            type = 'R';
+        }
+        else if (inputChar == '1') {
+            type = '1';
+        }
+        else if (inputChar == '2') {
+            type = '2';
+        }
+        else if (inputChar == '3') {
+            type = '3';
+        }
+        else if (inputChar == '4') {
+            type = '4';
+        }
+    }
 
     private boolean walkability = false;
 

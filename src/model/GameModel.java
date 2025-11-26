@@ -1,5 +1,7 @@
 package model;
 
+import controller.KeyHandler;
+
 import java.util.ArrayList;
 
 public class GameModel {
@@ -16,7 +18,7 @@ public class GameModel {
     public GameModel(KeyHandler keyH) {
         this.keyH = keyH;
         this.tiles = new Tile[inputMap.length][inputMap[0].length];
-        this.hero = new Hero(10,10,3,this, keyH);
+        this.hero = new Hero(4,3,3,this, keyH);
         this.cChecker = new CollisionChecker(this);
         initializeTiles();
     }
@@ -53,27 +55,35 @@ public class GameModel {
                 }
                 else if (c == 'B') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == 'L') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == 'R') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == 'T') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == '1') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == '2') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == '3') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else if (c == '4') {
                     tiles[i][j] = new BarrierTile(i, j);
+                    tiles[i][j].setBarrierType(c);
                 }
                 else {
                     System.out.println("Unknown char at (" + i + "," + j + ")");
@@ -96,5 +106,18 @@ public class GameModel {
         bombs.removeIf(b -> b.exploded);
 
     }
+
+    public void destroyTile(int row, int col) {
+
+
+
+        if (row >= 0 && row < tiles.length && col >= 0 && col < tiles[row].length) {
+            if (tiles[row][col].getType() == 'D') {
+                tiles[row][col] = new WalkableTile(row, col);
+            }
+        }
+        System.out.println("Destroyed tile " + row + "," + col);
+    }
+
 
 }

@@ -132,35 +132,37 @@ public class GamePanel extends JPanel {
                     g.drawImage(indestructibleTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 } else if (c == 'D') {
                     g.drawImage(basicTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
+                    if (tiles[i][j].getDestroyedStatus() == false)
                     g.drawImage(breakableTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 } else if (c == ' ') {
                     g.drawImage(basicTile, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == 'B') {
+                } else if (c == 'B') {
                     g.drawImage(borderBottom, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == 'L') {
+                } else if (c == 'L') {
                     g.drawImage(borderLeftLine, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == 'R') {
+                } else if (c == 'R') {
                     g.drawImage(borderRightLine, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == 'T') {
+                } else if (c == 'T') {
                     g.drawImage(borderTop, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == '1') {
+                } else if (c == '1') {
                     g.drawImage(borderTopLeft, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == '2') {
+                } else if (c == '2') {
                     g.drawImage(borderTopRight, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == '3') {
+                } else if (c == '3') {
                     g.drawImage(borderBottomLeft, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
-                } else if (gm.inputMap[i][j] == '4') {
+                } else if (c == '4') {
                     g.drawImage(borderBottomRight, j * gm.tileSize, i * gm.tileSize, gm.tileSize, gm.tileSize, null);
                 }
 
-            }
+
+                }
         }
     }
 
     public void drawBomb(Graphics2D g2, Bomba b) {
 
 
-        g2.drawImage(normalBomb, b.getX() * gm.tileSize, b.getY() * gm.tileSize, gm.tileSize, gm.tileSize, null);
+        g2.drawImage(normalBomb, b.getRow() * gm.tileSize, b.getCol() * gm.tileSize, gm.tileSize, gm.tileSize, null);
     }
 
 

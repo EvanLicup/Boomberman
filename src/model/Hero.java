@@ -1,5 +1,7 @@
 package model;
 
+import controller.KeyHandler;
+
 import java.awt.*;
 
 /**
@@ -15,7 +17,7 @@ public class Hero {
     private int y;
 
     /** Number of hearts (lives) remaining for the hero. */
-    private int hearts;
+    private int hearts = 3;
 
     // ADDED
     private int heroSpeed = 5;
@@ -37,9 +39,8 @@ public class Hero {
      * @param hearts the initial number of hearts (lives) the hero starts with
      */
     public Hero(int x, int y, int hearts, GameModel gm, KeyHandler keyH) {
-        this.x = 4 * gm.tileSize;
-        this.y = 3 * gm.tileSize;
-        this.hearts = hearts;
+        this.x = x * gm.tileSize;
+        this.y = y * gm.tileSize;
         this.gm = gm;
         this.keyH = keyH;
     }
@@ -66,8 +67,10 @@ public class Hero {
     public int getHearts() {
         return hearts;
     }
-    // ADDED
 
+    public void loseHeart() {
+        hearts--;
+    }
 
     public void update() {
 
@@ -118,7 +121,7 @@ public class Hero {
             if (hasActiveBomb == false) {
                 int centerX = getX() + gm.tileSize/ 2;
                 int centerY = getY() + gm.tileSize/ 2;
-                Bomba b = new Bomba(centerX/ gm.tileSize,centerY / gm.tileSize, 3.0);
+                Bomba b = new Bomba(centerX/ gm.tileSize,centerY / gm.tileSize, 3.0, gm);
                 gm.bombs.add(b);
 
             }

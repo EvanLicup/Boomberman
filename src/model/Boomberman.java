@@ -1,5 +1,6 @@
 package model;
 
+import controller.KeyHandler;
 import gamethread.Gamethread;
 
 import javax.swing.*;
